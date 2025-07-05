@@ -2,6 +2,7 @@ name: Sync with Upstream
 
 on:
   schedule:
+    # Runs at 00:00 UTC every day
     - cron: '0 0 * * *'
   workflow_dispatch:
 
@@ -27,4 +28,5 @@ jobs:
           git remote add upstream https://github.com/gzzhongqi/vertex2openai.git
           git fetch upstream
           git rebase upstream/main
-          git push origin main
+          # Add --force to the push command
+          git push origin main --force
