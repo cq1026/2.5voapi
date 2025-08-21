@@ -11,15 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete old workflow runs
-        uses: actions/delete-workflow-runs@v4
+        # 使用正确的 Action 名称和版本
+        uses: Mattraks/delete-workflow-runs@v2
         with:
           # 用于认证的 GitHub Token
           token: ${{ secrets.GITHUB_TOKEN }}
           # 要删除运行记录的仓库，默认为当前仓库
           repository: ${{ github.repository }}
           # 保留最近 90 天的运行记录
-          retain_days: 10
+          retain_days: 90
           # 至少保留 5 次运行记录，即使它们超过了 retain_days
-          keep_minimum_runs: 3
-          # 是否删除与工作流运行相关的日志文件
-          delete_run_artifacts: false
+          keep_minimum_runs: 5
