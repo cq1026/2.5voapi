@@ -1,24 +1,19 @@
-# .github/workflows/delete-runs.yml
 name: Delete old workflow runs
 
 on:
   workflow_dispatch: # 允许手动触发
   schedule:
-    - cron: '0 0 * * *' # 每天午夜执行一次
+    - cron: '0 0 * * *' # 每天凌晨0点执行
 
 jobs:
   delete-runs:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write # 必须赋予写入actions的权限
     steps:
-      - name: Delete old workflow runs
-        # 使用正确的 Action 名称和版本
+      - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2
         with:
-          # 用于认证的 GitHub Token
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # 要删除运行记录的仓库，默认为当前仓库
+          token: ${{ github.token }}
           repository: ${{ github.repository }}
-          # 保留最近 90 天的运行记录
-          retain_days: 3
-          # 至少保留 5 次运行记录，即使它们超过了 retain_days
-          keep_minimum_runs: 3
+          retain_days: 3 # 保留最近15天的运行记录
