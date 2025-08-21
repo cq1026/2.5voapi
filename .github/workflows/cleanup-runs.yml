@@ -16,4 +16,4 @@ jobs:
         with:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
-          retain_days: 3 # 保留最近15天的运行记录
+          retain_days: 1 # 保留最近15天的运行记录
