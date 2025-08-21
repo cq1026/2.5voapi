@@ -1,0 +1,50 @@
+# .github/workflows/keep-alive.yml
+
+name: HuggingFace Space Keep-Alive
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping_spaces:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send GET requests to Multiple Spaces and Check Status
+        run: |
+          # --- 在下面添加你要保持活跃的 Space URL 列表 ---
+          URLS=(
+            "https://cq1026-2-5voapi.hf.space/"
+            "https://cq1026-jini.hf.space/"
+            "https://cq1026-cskaixiang.hf.space/"
+          )
+          # ----------------------------------------------------
+          
+          # 设置一个标志，用来追踪是否所有请求都成功了
+          ALL_SUCCESS=true
+
+          # 循环访问列表中的每一个 URL
+          for URL in "${URLS[@]}"; do
+            echo "---------------------------------"
+            echo "Pinging URL: $URL"
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            echo "Received status code: $HTTP_STATUS"
+
+            if [ "$HTTP_STATUS" -eq 200 ]; then
+              echo "✅ Success!"
+            else
+              echo "❌ Failure!"
+              # 只要有一个失败，就将标志设为 false
+              ALL_SUCCESS=false
+            fi
+          done
+          
+          echo "================================="
+          # 最后根据标志判断整个任务是成功还是失败
+          if [ "$ALL_SUCCESS" = true ]; then
+            echo "All Spaces responded successfully."
+          else
+            echo "One or more Spaces failed to respond correctly."
+            exit 1
+          fi
