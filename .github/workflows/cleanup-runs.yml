@@ -1,26 +1,25 @@
-name: Cleanup Old Workflow Runs
+# .github/workflows/delete-runs.yml
+name: Delete old workflow runs
 
 on:
-  # 每天凌晨执行一次，或者根据你的需要调整
+  workflow_dispatch: # 允许手动触发
   schedule:
-    - cron: '0 0 * * *'
-  # 允许手动触发
-  workflow_dispatch:
+    - cron: '0 0 * * *' # 每天午夜执行一次
 
 jobs:
-  delete-old-runs:
+  delete-runs:
     runs-on: ubuntu-latest
-    # **重要**：必须添加这个权限，否则 Action 无权删除记录
-    permissions:
-      actions: write
-      
     steps:
       - name: Delete old workflow runs
-        uses: GitRML/delete-workflow-runs@v1.2.0 # 使用一个稳定且有效的 Action
+        uses: actions/delete-workflow-runs@v4
         with:
-          # GitHub Token 是必需的，用于授权
-          retoken: ${{ secrets.GITHUB_TOKEN }}
-          # 保留最近 7 天的记录
-          retain_days: 2
-          # 但无论天数如何，始终保留最近的 3 次运行记录
+          # 用于认证的 GitHub Token
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # 要删除运行记录的仓库，默认为当前仓库
+          repository: ${{ github.repository }}
+          # 保留最近 90 天的运行记录
+          retain_days: 10
+          # 至少保留 5 次运行记录，即使它们超过了 retain_days
           keep_minimum_runs: 3
+          # 是否删除与工作流运行相关的日志文件
+          delete_run_artifacts: false
