@@ -19,6 +19,6 @@ jobs:
           # 要删除运行记录的仓库，默认为当前仓库
           repository: ${{ github.repository }}
           # 保留最近 90 天的运行记录
-          retain_days: 90
+          retain_days: 3
           # 至少保留 5 次运行记录，即使它们超过了 retain_days
-          keep_minimum_runs: 5
+          keep_minimum_runs: 3
